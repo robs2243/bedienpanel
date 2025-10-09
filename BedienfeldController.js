@@ -42,6 +42,37 @@ class BedienfeldController {
     }
 
     /**
+     * Neu verbinden zu einem anderen OPC UA Server
+     */
+    async reconnect(newEndpoint) {
+        try {
+            console.log(`Reconnect zu neuem Server: ${newEndpoint}`);
+
+            // Alte Verbindung trennen
+            await this.opcClient.disconnect();
+
+            // Neuen Client mit neuem Endpoint erstellen
+            this.opcClient = new OPCUAClientManager(newEndpoint);
+
+            // Neue Verbindung herstellen
+            await this.opcClient.connect();
+
+            console.log("Erfolgreich neu verbunden");
+            return true;
+        } catch (error) {
+            console.error("Fehler beim Reconnect:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Aktuellen Endpoint zurückgeben
+     */
+    getCurrentEndpoint() {
+        return this.opcClient.endpointUrl;
+    }
+
+    /**
      * Start-Button Aktion
      */
     async start() {

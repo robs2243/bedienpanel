@@ -102,9 +102,28 @@ class WebServer {
     }
 }
 
+// Konfiguration laden
+function loadConfig() {
+    try {
+        const configPath = path.join(__dirname, 'config.json');
+        const configData = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configData);
+    } catch (error) {
+        console.warn("Konnte config.json nicht laden, verwende Standardwerte");
+        return {
+            web: { port: 8080 }
+        };
+    }
+}
+
 // Server starten, wenn direkt ausgeführt
 if (require.main === module) {
-    const webServer = new WebServer(8080);
+    const config = loadConfig();
+    const webPort = config.web.port || 8080;
+
+    console.log(`Verwende Web Server Port: ${webPort}`);
+
+    const webServer = new WebServer(webPort);
     webServer.start();
 
     // Graceful shutdown

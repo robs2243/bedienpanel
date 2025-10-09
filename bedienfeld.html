@@ -7,6 +7,41 @@
     <link rel="stylesheet" href="bedienfeld.css">
 </head>
 <body>
+    <!-- Settings Button -->
+    <div class="settings-button" id="settingsBtn">⚙</div>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <div class="settings-title">OPC UA Server Einstellungen</div>
+                <div class="close-button" id="closeModal">×</div>
+            </div>
+
+            <div class="connection-status" id="connectionStatus">
+                Verbindungsstatus wird geladen...
+            </div>
+
+            <form class="settings-form" id="settingsForm">
+                <div class="form-group">
+                    <label class="form-label" for="serverEndpoint">Server Endpoint:</label>
+                    <input
+                        type="text"
+                        id="serverEndpoint"
+                        class="form-input"
+                        placeholder="opc.tcp://192.168.1.100:4842"
+                        required
+                    />
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="save-button">Verbinden</button>
+                    <button type="button" class="cancel-button" id="cancelBtn">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="panel">
         <div class="top-row">
             <div class="control-group">
@@ -166,6 +201,104 @@
                 // Silent fail bei Status Updates
             }
         }, 2000);
+
+        // ========== Settings Modal Funktionalität ==========
+
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const settingsForm = document.getElementById('settingsForm');
+        const serverEndpointInput = document.getElementById('serverEndpoint');
+        const connectionStatus = document.getElementById('connectionStatus');
+
+        // Modal öffnen
+        settingsBtn.addEventListener('click', async () => {
+            settingsModal.classList.add('active');
+
+            // Aktuelle Konfiguration laden
+            try {
+                const response = await fetch(API_URL + '/config');
+                const config = await response.json();
+                serverEndpointInput.value = config.currentEndpoint;
+                updateConnectionStatus(true);
+            } catch (error) {
+                console.error('Fehler beim Laden der Konfiguration:', error);
+                updateConnectionStatus(false);
+            }
+        });
+
+        // Modal schließen
+        closeModal.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        // Modal schließen bei Klick außerhalb
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('active');
+            }
+        });
+
+        // Form Submit - Reconnect
+        settingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const newEndpoint = serverEndpointInput.value.trim();
+
+            if (!newEndpoint) {
+                alert('Bitte gib einen gültigen Endpoint ein');
+                return;
+            }
+
+            // Verbindungsstatus auf "wird verbunden" setzen
+            connectionStatus.textContent = 'Verbindung wird hergestellt...';
+            connectionStatus.className = 'connection-status';
+
+            try {
+                const response = await fetch(API_URL + '/reconnect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ endpoint: newEndpoint })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    updateConnectionStatus(true);
+                    alert('Erfolgreich mit neuem Server verbunden!');
+
+                    // Modal nach erfolgreicher Verbindung schließen
+                    setTimeout(() => {
+                        settingsModal.classList.remove('active');
+                    }, 1000);
+                } else {
+                    updateConnectionStatus(false);
+                    alert('Verbindung fehlgeschlagen: ' + (result.error || 'Unbekannter Fehler'));
+                }
+            } catch (error) {
+                console.error('Fehler beim Reconnect:', error);
+                updateConnectionStatus(false);
+                alert('Verbindung zum API Server fehlgeschlagen');
+            }
+        });
+
+        // Verbindungsstatus aktualisieren
+        function updateConnectionStatus(isConnected) {
+            if (isConnected) {
+                connectionStatus.textContent = '✓ Verbunden';
+                connectionStatus.className = 'connection-status connected';
+            } else {
+                connectionStatus.textContent = '✗ Nicht verbunden';
+                connectionStatus.className = 'connection-status disconnected';
+            }
+        }
     </script>
 </body>
 </html>

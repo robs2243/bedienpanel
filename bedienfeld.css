@@ -281,3 +281,183 @@ body {
 .toggle-label:last-child {
     text-align: right;
 }
+
+/* Settings Button */
+.settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #555 0%, #333 100%);
+    border: 3px solid #888;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    color: white;
+    transition: all 0.2s;
+    z-index: 1000;
+}
+
+.settings-button:hover {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    transform: rotate(45deg);
+}
+
+.settings-button:active {
+    transform: rotate(45deg) translateY(2px);
+}
+
+/* Settings Modal */
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    place-items: center;
+}
+
+.settings-modal.active {
+    display: grid;
+}
+
+.settings-content {
+    background: linear-gradient(135deg, #e0e0e0 0%, #c8c8c8 100%);
+    border: 3px solid #888;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 90%;
+    display: grid;
+    gap: 20px;
+}
+
+.settings-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    border-bottom: 2px solid #888;
+    padding-bottom: 15px;
+}
+
+.settings-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.close-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+    border: 2px solid #888;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.close-button:hover {
+    background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%);
+}
+
+.settings-form {
+    display: grid;
+    gap: 15px;
+}
+
+.form-group {
+    display: grid;
+    gap: 8px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.form-input {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #888;
+    border-radius: 5px;
+    background: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 2px rgba(76,175,80,0.2);
+}
+
+.form-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.save-button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(180deg, #4caf50 0%, #2e7d32 100%);
+    color: white;
+    border: 2px solid #888;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.save-button:hover {
+    background: linear-gradient(180deg, #66bb6a 0%, #388e3c 100%);
+}
+
+.cancel-button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(180deg, #999 0%, #777 100%);
+    color: white;
+    border: 2px solid #888;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.cancel-button:hover {
+    background: linear-gradient(180deg, #aaa 0%, #888 100%);
+}
+
+.connection-status {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.connection-status.connected {
+    background: #c8e6c9;
+    color: #2e7d32;
+    border: 2px solid #4caf50;
+}
+
+.connection-status.disconnected {
+    background: #ffcdd2;
+    color: #c62828;
+    border: 2px solid #f44336;
+}

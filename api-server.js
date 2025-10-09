@@ -1,4 +1,6 @@
 const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const BedienfeldController = require("./BedienfeldController");
 
 /**
@@ -36,7 +38,9 @@ class APIServer {
                 console.log("  POST /set-step       - Schritt setzen (body: {step: number})");
                 console.log("  POST /reset          - Reset");
                 console.log("  POST /emergency-stop - Emergency Stop");
+                console.log("  POST /reconnect      - Server-Verbindung ändern (body: {endpoint: string})");
                 console.log("  GET  /status         - Alle Werte lesen");
+                console.log("  GET  /config         - Aktuelle Konfiguration lesen");
                 console.log("\nServer bereit für Anfragen...");
                 resolve();
             });
@@ -129,6 +133,25 @@ class APIServer {
             case '/emergency-stop':
                 result = await this.controller.emergencyStop();
                 break;
+            case '/reconnect':
+                if (data.endpoint) {
+                    try {
+                        await this.controller.reconnect(data.endpoint);
+                        result = true;
+                    } catch (error) {
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({
+                            success: false,
+                            error: 'Reconnect fehlgeschlagen: ' + error.message
+                        }));
+                        return;
+                    }
+                } else {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Endpoint fehlt' }));
+                    return;
+                }
+                break;
             default:
                 res.writeHead(404, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: 'Endpoint not found' }));
@@ -147,6 +170,13 @@ class APIServer {
             const values = await this.controller.readAllValues();
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(values));
+        } else if (req.url === '/config') {
+            // Aktuelle Konfiguration zurückgeben
+            const config = {
+                currentEndpoint: this.controller.getCurrentEndpoint()
+            };
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(config));
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Endpoint not found' }));
@@ -165,9 +195,27 @@ class APIServer {
     }
 }
 
+// Konfiguration laden
+function loadConfig() {
+    try {
+        const configPath = path.join(__dirname, 'config.json');
+        const configData = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configData);
+    } catch (error) {
+        console.warn("Konnte config.json nicht laden, verwende Standardwerte");
+        return {
+            opcua: { endpoint: "opc.tcp://localhost:4842" },
+            api: { port: 3001 }
+        };
+    }
+}
+
 // Server starten
-const API_PORT = 3001;
-const OPC_SERVER_ENDPOINT = "opc.tcp://localhost:4842";
+const config = loadConfig();
+const API_PORT = config.api.port;
+const OPC_SERVER_ENDPOINT = config.opcua.endpoint;
+
+console.log(`Verwende OPC UA Endpoint: ${OPC_SERVER_ENDPOINT}`);
 
 const apiServer = new APIServer(API_PORT, OPC_SERVER_ENDPOINT);
 

@@ -1,5 +1,7 @@
 const { OPCUAServer, Variant, DataType, StatusCodes } = require("node-opcua");
 const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
 // Zustandsvariablen
 const state = {
@@ -10,10 +12,29 @@ const state = {
     errorActive: false
 };
 
+// Konfiguration laden
+function loadConfig() {
+    try {
+        const configPath = path.join(__dirname, 'config.json');
+        const configData = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configData);
+    } catch (error) {
+        console.warn("Konnte config.json nicht laden, verwende Standardwerte");
+        return {
+            opcua: { port: 4842 }
+        };
+    }
+}
+
 async function main() {
+    const config = loadConfig();
+    const opcPort = config.opcua.port || 4842;
+
+    console.log(`Verwende OPC UA Port: ${opcPort}`);
+
     // Server erstellen
     const server = new OPCUAServer({
-        port: 4842,
+        port: opcPort,
         resourcePath: "/UA/BedienpanelServer",
         buildInfo: {
             productName: "Bedienpanel OPC UA Server",

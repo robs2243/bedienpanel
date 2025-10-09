@@ -1,0 +1,13 @@
+{
+  "opcua": {
+    "endpoint": "opc.tcp://localhost:4842",
+    "port": 4842,
+    "host": "localhost"
+  },
+  "api": {
+    "port": 3001
+  },
+  "web": {
+    "port": 8080
+  }
+}
