@@ -40,6 +40,7 @@ async function main() {
         componentOf: device,
         browseName: "ToolOn",
         dataType: "Boolean",
+        minimumSamplingInterval: 100,
         value: {
             get: () => new Variant({ dataType: DataType.Boolean, value: state.toolOn }),
             set: (variant) => {
@@ -54,6 +55,7 @@ async function main() {
         componentOf: device,
         browseName: "IsRunning",
         dataType: "Boolean",
+        minimumSamplingInterval: 100,
         value: {
             get: () => new Variant({ dataType: DataType.Boolean, value: state.isRunning }),
             set: (variant) => {
@@ -68,6 +70,7 @@ async function main() {
         componentOf: device,
         browseName: "ManualMode",
         dataType: "Boolean",
+        minimumSamplingInterval: 100,
         value: {
             get: () => new Variant({ dataType: DataType.Boolean, value: state.manualMode }),
             set: (variant) => {
@@ -82,6 +85,7 @@ async function main() {
         componentOf: device,
         browseName: "CurrentStep",
         dataType: "Int32",
+        minimumSamplingInterval: 100,
         value: {
             get: () => new Variant({ dataType: DataType.Int32, value: state.currentStep }),
             set: (variant) => {
@@ -96,6 +100,7 @@ async function main() {
         componentOf: device,
         browseName: "ErrorActive",
         dataType: "Boolean",
+        minimumSamplingInterval: 100,
         value: {
             get: () => new Variant({ dataType: DataType.Boolean, value: state.errorActive }),
             set: (variant) => {
