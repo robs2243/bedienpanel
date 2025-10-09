@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedienfeld</title>
+    <link rel="stylesheet" href="bedienfeld.css">
+</head>
+<body>
+    <div class="panel">
+        <div class="top-row">
+            <div class="control-group">
+                <div class="section-title">Toolcontrol</div>
+                <div class="button-row">
+                    <button class="button button-gray">Tool On</button>
+                    <button class="button button-gray">Tool Off</button>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button class="button button-green">Start</button>
+                <button class="button button-red">Stop</button>
+                <div class="toggle-switch">
+                    <div class="section-title">Toolmode</div>
+                    <div class="toggle-track">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="section-title">Reset/Quit</div>
+                <button class="button button-gray">Reset</button>
+            </div>
+        </div>
+
+        <div class="middle-row">
+            <div class="indicator-group">
+                <div class="indicator-label">MAN</div>
+                <div class="indicator"></div>
+            </div>
+
+            <div class="indicator-group">
+                <div class="indicator-label">ERROR</div>
+                <div class="indicator"></div>
+            </div>
+
+            <div class="step-display">
+                <div class="indicator-label">Current Step</div>
+                <div class="step-value">00</div>
+            </div>
+
+            <div class="emergency-stop">
+                <div class="indicator-label">Emergency STOP</div>
+                <div class="emergency-button"></div>
+            </div>
+        </div>
+
+        <div class="actuator-section">
+            <div class="section-title">Actuator Selection</div>
+            <div class="actuator-content">
+                <button class="button button-gray">Home</button>
+                <button class="button button-gray">Work</button>
+                <select class="dropdown">
+                    <option>- - - - -</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Switch Funktionalität
+        document.querySelector('.toggle-track').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
