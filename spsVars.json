@@ -1,0 +1,82 @@
+{
+  "xBTN_START": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xBTN_START\"",
+    "datatype": "Bool"
+  },
+  "xBTN_STOP": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xBTN_STOP\"",
+    "datatype": "Bool"
+  },
+  "xBTN_TOOL_ON": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xBTN_TOOL_ON\"",
+    "datatype": "Bool"
+  },
+  "xBTN_TOOL_OFF": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xBTN_TOOL_OFF\"",
+    "datatype": "Bool"
+  },
+  "xBTN_RESET": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xBTN_RESET\"",
+    "datatype": "Bool"
+  },
+  "xMAN_AUTO": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xMAN_AUTO\"",
+    "datatype": "Bool"
+  },
+  "xEM_STOP": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xEM_STOP\"",
+    "datatype": "Bool"
+  },
+  "xP_TOOL_ON": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xP_TOOL_ON\"",
+    "datatype": "Bool"
+  },
+  "xP_START": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xP_START\"",
+    "datatype": "Bool"
+  },
+  "xP_MAN": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xP_MAN\"",
+    "datatype": "Bool"
+  },
+  "xP_RESET": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xP_RESET\"",
+    "datatype": "Bool"
+  },
+  "xP_ERROR": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xP_ERROR\"",
+    "datatype": "Bool"
+  },
+  "xTO_WORKPOS": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xTO_WORKPOS\"",
+    "datatype": "Bool"
+  },
+  "xTO_HOMEPOS": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"xTO_HOMEPOS\"",
+    "datatype": "Bool"
+  },
+  "iCURRENT_STEP": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"iCURRENT_STEP\"",
+    "datatype": "Int16"
+  },
+  "iPV_ACTUATOR": {
+    "ns": 3,
+    "s": "\"dbBedienfeld\".\"iPV_ACTUATOR\"",
+    "datatype": "Int16"
+  }
+}

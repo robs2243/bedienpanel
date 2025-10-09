@@ -35,7 +35,8 @@ class APIServer {
                 console.log("  POST /tool-on        - Tool On");
                 console.log("  POST /tool-off       - Tool Off");
                 console.log("  POST /set-mode       - Modus setzen (body: {manual: true/false})");
-                console.log("  POST /set-step       - Schritt setzen (body: {step: number})");
+                console.log("  POST /to-home        - Home Position anfahren");
+                console.log("  POST /to-work        - Work Position anfahren");
                 console.log("  POST /reset          - Reset");
                 console.log("  POST /emergency-stop - Emergency Stop");
                 console.log("  POST /reconnect      - Server-Verbindung ändern (body: {endpoint: string})");
@@ -122,10 +123,11 @@ class APIServer {
                     result = await this.controller.setManualMode(data.manual);
                 }
                 break;
-            case '/set-step':
-                if (data.step !== undefined) {
-                    result = await this.controller.setCurrentStep(data.step);
-                }
+            case '/to-home':
+                result = await this.controller.toHomePosition();
+                break;
+            case '/to-work':
+                result = await this.controller.toWorkPosition();
                 break;
             case '/reset':
                 result = await this.controller.reset();

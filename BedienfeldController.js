@@ -1,5 +1,7 @@
 const { DataType } = require("node-opcua");
 const OPCUAClientManager = require("./OPCUAClient");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Controller Klasse für das Bedienfeld
@@ -9,13 +11,33 @@ class BedienfeldController {
     constructor(serverEndpoint) {
         this.opcClient = new OPCUAClientManager(serverEndpoint);
 
-        // Node IDs für die verschiedenen Variablen (numerische IDs vom Server)
+        // SPS Variablen aus spsVars.json laden
+        const spsVarsPath = path.join(__dirname, 'spsVars.json');
+        const spsVars = JSON.parse(fs.readFileSync(spsVarsPath, 'utf8'));
+
+        // Node IDs für die verschiedenen SPS-Variablen
         this.nodeIds = {
-            toolOn: "ns=1;i=1001",
-            isRunning: "ns=1;i=1002",
-            manualMode: "ns=1;i=1003",
-            currentStep: "ns=1;i=1004",
-            errorActive: "ns=1;i=1005"
+            // Button Inputs (von Bedienfeld zu SPS)
+            btnStart: `ns=${spsVars.xBTN_START.ns};s=${spsVars.xBTN_START.s}`,
+            btnStop: `ns=${spsVars.xBTN_STOP.ns};s=${spsVars.xBTN_STOP.s}`,
+            btnToolOn: `ns=${spsVars.xBTN_TOOL_ON.ns};s=${spsVars.xBTN_TOOL_ON.s}`,
+            btnToolOff: `ns=${spsVars.xBTN_TOOL_OFF.ns};s=${spsVars.xBTN_TOOL_OFF.s}`,
+            btnReset: `ns=${spsVars.xBTN_RESET.ns};s=${spsVars.xBTN_RESET.s}`,
+            btnManAuto: `ns=${spsVars.xMAN_AUTO.ns};s=${spsVars.xMAN_AUTO.s}`,
+            btnEmStop: `ns=${spsVars.xEM_STOP.ns};s=${spsVars.xEM_STOP.s}`,
+            btnToWorkPos: `ns=${spsVars.xTO_WORKPOS.ns};s=${spsVars.xTO_WORKPOS.s}`,
+            btnToHomePos: `ns=${spsVars.xTO_HOMEPOS.ns};s=${spsVars.xTO_HOMEPOS.s}`,
+
+            // Panel Outputs (von SPS zu Bedienfeld - Status Anzeigen)
+            panelToolOn: `ns=${spsVars.xP_TOOL_ON.ns};s=${spsVars.xP_TOOL_ON.s}`,
+            panelStart: `ns=${spsVars.xP_START.ns};s=${spsVars.xP_START.s}`,
+            panelMan: `ns=${spsVars.xP_MAN.ns};s=${spsVars.xP_MAN.s}`,
+            panelReset: `ns=${spsVars.xP_RESET.ns};s=${spsVars.xP_RESET.s}`,
+            panelError: `ns=${spsVars.xP_ERROR.ns};s=${spsVars.xP_ERROR.s}`,
+
+            // Process Values
+            currentStep: `ns=${spsVars.iCURRENT_STEP.ns};s=${spsVars.iCURRENT_STEP.s}`,
+            pvActuator: `ns=${spsVars.iPV_ACTUATOR.ns};s=${spsVars.iPV_ACTUATOR.s}`
         };
     }
 
@@ -78,7 +100,7 @@ class BedienfeldController {
     async start() {
         console.log("Start-Befehl ausgeführt");
         return await this.opcClient.writeVariable(
-            this.nodeIds.isRunning,
+            this.nodeIds.btnStart,
             true,
             DataType.Boolean
         );
@@ -90,8 +112,8 @@ class BedienfeldController {
     async stop() {
         console.log("Stop-Befehl ausgeführt");
         return await this.opcClient.writeVariable(
-            this.nodeIds.isRunning,
-            false,
+            this.nodeIds.btnStop,
+            true,
             DataType.Boolean
         );
     }
@@ -102,7 +124,7 @@ class BedienfeldController {
     async toolOn() {
         console.log("Tool On");
         return await this.opcClient.writeVariable(
-            this.nodeIds.toolOn,
+            this.nodeIds.btnToolOn,
             true,
             DataType.Boolean
         );
@@ -114,59 +136,62 @@ class BedienfeldController {
     async toolOff() {
         console.log("Tool Off");
         return await this.opcClient.writeVariable(
-            this.nodeIds.toolOn,
-            false,
+            this.nodeIds.btnToolOff,
+            true,
             DataType.Boolean
         );
     }
 
     /**
      * Modus setzen (Manual/Auto)
+     * true = Manual, false = Auto
      */
     async setManualMode(isManual) {
         console.log(`Modus: ${isManual ? 'Manual' : 'Auto'}`);
         return await this.opcClient.writeVariable(
-            this.nodeIds.manualMode,
+            this.nodeIds.btnManAuto,
             isManual,
             DataType.Boolean
         );
     }
 
     /**
-     * Aktuellen Schritt setzen
+     * Home Position anfahren
      */
-    async setCurrentStep(step) {
-        console.log(`Schritt: ${step}`);
+    async toHomePosition() {
+        console.log("Home Position anfahren");
         return await this.opcClient.writeVariable(
-            this.nodeIds.currentStep,
-            step,
-            DataType.Int32
-        );
-    }
-
-    /**
-     * Error Status setzen
-     */
-    async setError(hasError) {
-        console.log(`Error: ${hasError}`);
-        return await this.opcClient.writeVariable(
-            this.nodeIds.errorActive,
-            hasError,
+            this.nodeIds.btnToHomePos,
+            true,
             DataType.Boolean
         );
     }
 
     /**
-     * Alle aktuellen Werte lesen
+     * Work Position anfahren
+     */
+    async toWorkPosition() {
+        console.log("Work Position anfahren");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnToWorkPos,
+            true,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Alle aktuellen Werte lesen (Status von SPS)
      */
     async readAllValues() {
         try {
             const values = {
-                toolOn: await this.opcClient.readVariable(this.nodeIds.toolOn),
-                isRunning: await this.opcClient.readVariable(this.nodeIds.isRunning),
-                manualMode: await this.opcClient.readVariable(this.nodeIds.manualMode),
+                // Panel Status (von SPS)
+                panelToolOn: await this.opcClient.readVariable(this.nodeIds.panelToolOn),
+                panelStart: await this.opcClient.readVariable(this.nodeIds.panelStart),
+                panelMan: await this.opcClient.readVariable(this.nodeIds.panelMan),
+                panelError: await this.opcClient.readVariable(this.nodeIds.panelError),
                 currentStep: await this.opcClient.readVariable(this.nodeIds.currentStep),
-                errorActive: await this.opcClient.readVariable(this.nodeIds.errorActive)
+                pvActuator: await this.opcClient.readVariable(this.nodeIds.pvActuator)
             };
             return values;
         } catch (error) {
@@ -180,16 +205,11 @@ class BedienfeldController {
      */
     async reset() {
         console.log("Reset ausgeführt");
-        try {
-            await this.stop();
-            await this.toolOff();
-            await this.setError(false);
-            await this.setCurrentStep(0);
-            return true;
-        } catch (error) {
-            console.error("Fehler beim Reset:", error);
-            return false;
-        }
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnReset,
+            true,
+            DataType.Boolean
+        );
     }
 
     /**
@@ -197,15 +217,11 @@ class BedienfeldController {
      */
     async emergencyStop() {
         console.log("EMERGENCY STOP!");
-        try {
-            await this.stop();
-            await this.toolOff();
-            await this.setError(true);
-            return true;
-        } catch (error) {
-            console.error("Fehler beim Emergency Stop:", error);
-            return false;
-        }
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnEmStop,
+            true,
+            DataType.Boolean
+        );
     }
 }
 

@@ -164,14 +164,14 @@
         const homeButton = document.querySelectorAll('.actuator-content .button')[0];
         homeButton.addEventListener('click', function() {
             console.log('Home Button gedrückt');
-            // Hier könnte später Home-Position Logik implementiert werden
+            callAPI('/to-home');
         });
 
         // Work Button
         const workButton = document.querySelectorAll('.actuator-content .button')[1];
         workButton.addEventListener('click', function() {
             console.log('Work Button gedrückt');
-            // Hier könnte später Work-Position Logik implementiert werden
+            callAPI('/to-work');
         });
 
         // Emergency Stop Button
