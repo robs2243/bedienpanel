@@ -72,12 +72,12 @@
         <div class="middle-row">
             <div class="indicator-group">
                 <div class="indicator-label">MAN</div>
-                <div class="indicator"></div>
+                <div class="indicator" id="manIndicator"></div>
             </div>
 
             <div class="indicator-group">
                 <div class="indicator-label">ERROR</div>
-                <div class="indicator"></div>
+                <div class="indicator" id="errorIndicator"></div>
             </div>
 
             <div class="step-display">
@@ -214,6 +214,10 @@
             callAPI('/set-mode', { manual: isManual });
         });
 
+        // Referenzen zu den Indikatoren
+        const manIndicator = document.getElementById('manIndicator');
+        const errorIndicator = document.getElementById('errorIndicator');
+
         // Status regelmäßig aktualisieren (alle 2 Sekunden)
         setInterval(async () => {
             try {
@@ -229,6 +233,24 @@
                 // PV Actuator aktualisieren (Dropdown-Auswahl synchronisieren)
                 if (status.pvActuator !== undefined && status.pvActuator >= 1 && status.pvActuator <= 10) {
                     actuatorDropdown.value = status.pvActuator;
+                }
+
+                // MAN Indicator aktualisieren (grün wenn xP_MAN = true)
+                if (status.panelMan !== undefined) {
+                    if (status.panelMan) {
+                        manIndicator.classList.add('man-active');
+                    } else {
+                        manIndicator.classList.remove('man-active');
+                    }
+                }
+
+                // ERROR Indicator aktualisieren (rot blinkend wenn xP_ERROR = true)
+                if (status.panelError !== undefined) {
+                    if (status.panelError) {
+                        errorIndicator.classList.add('error-active');
+                    } else {
+                        errorIndicator.classList.remove('error-active');
+                    }
                 }
 
                 console.log('Status Update:', status);
