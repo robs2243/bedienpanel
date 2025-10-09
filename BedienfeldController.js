@@ -273,6 +273,7 @@ class BedienfeldController {
                 panelToolOn: await this.opcClient.readVariable(this.nodeIds.panelToolOn),
                 panelStart: await this.opcClient.readVariable(this.nodeIds.panelStart),
                 panelMan: await this.opcClient.readVariable(this.nodeIds.panelMan),
+                panelReset: await this.opcClient.readVariable(this.nodeIds.panelReset),
                 panelError: await this.opcClient.readVariable(this.nodeIds.panelError),
                 currentStep: await this.opcClient.readVariable(this.nodeIds.currentStep),
                 pvActuator: await this.opcClient.readVariable(this.nodeIds.pvActuator)

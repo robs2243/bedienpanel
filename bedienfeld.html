@@ -214,9 +214,15 @@
             callAPI('/set-mode', { manual: isManual });
         });
 
-        // Referenzen zu den Indikatoren
+        // Referenzen zu den Indikatoren und Buttons
         const manIndicator = document.getElementById('manIndicator');
         const errorIndicator = document.getElementById('errorIndicator');
+
+        // Button Referenzen für Lampen
+        const toolOnButton = document.querySelectorAll('.button')[0];
+        const toolOffButton = document.querySelectorAll('.button')[1];
+        const startButton = document.querySelector('.button-green');
+        const resetButton = document.querySelectorAll('.button-gray')[2];
 
         // Status regelmäßig aktualisieren (jede Sekunde)
         setInterval(async () => {
@@ -250,6 +256,37 @@
                         errorIndicator.classList.add('error-active');
                     } else {
                         errorIndicator.classList.remove('error-active');
+                    }
+                }
+
+                // Tool On/Off Button Lampen (blau, gegenseitig exklusiv)
+                if (status.panelToolOn !== undefined) {
+                    if (status.panelToolOn) {
+                        // Tool On aktiv -> Tool On leuchtet blau, Tool Off aus
+                        toolOnButton.classList.add('lamp-blue');
+                        toolOffButton.classList.remove('lamp-blue');
+                    } else {
+                        // Tool Off aktiv -> Tool Off leuchtet blau, Tool On aus
+                        toolOnButton.classList.remove('lamp-blue');
+                        toolOffButton.classList.add('lamp-blue');
+                    }
+                }
+
+                // Start Button Lampe (grün wenn xP_START = true)
+                if (status.panelStart !== undefined) {
+                    if (status.panelStart) {
+                        startButton.classList.add('lamp-green');
+                    } else {
+                        startButton.classList.remove('lamp-green');
+                    }
+                }
+
+                // Reset Button Lampe (weiß wenn xP_RESET = true)
+                if (status.panelReset !== undefined) {
+                    if (status.panelReset) {
+                        resetButton.classList.add('lamp-white');
+                    } else {
+                        resetButton.classList.remove('lamp-white');
                     }
                 }
 
