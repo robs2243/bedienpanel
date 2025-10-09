@@ -37,7 +37,7 @@ class APIServer {
                 console.log("  POST /reset-press / /reset-release        - Reset Taster");
                 console.log("  POST /home-press / /home-release          - Home Taster");
                 console.log("  POST /work-press / /work-release          - Work Taster");
-                console.log("  POST /emstop-press / /emstop-release      - Emergency Stop");
+                console.log("  POST /set-emstop     - NOT-AUS setzen (body: {active: true/false})");
                 console.log("  POST /set-mode       - Modus setzen (body: {manual: true/false})");
                 console.log("  POST /set-actuator   - Actuator wählen (body: {actuator: 1-10})");
                 console.log("  POST /reconnect      - Server-Verbindung ändern (body: {endpoint: string})");
@@ -149,11 +149,10 @@ class APIServer {
             case '/work-release':
                 result = await this.controller.toWorkRelease();
                 break;
-            case '/emstop-press':
-                result = await this.controller.emergencyStopPress();
-                break;
-            case '/emstop-release':
-                result = await this.controller.emergencyStopRelease();
+            case '/set-emstop':
+                if (data.active !== undefined) {
+                    result = await this.controller.setEmergencyStop(data.active);
+                }
                 break;
             case '/set-mode':
                 if (data.manual !== undefined) {

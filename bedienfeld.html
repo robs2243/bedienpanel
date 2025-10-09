@@ -195,8 +195,26 @@
         // Work Button (Taster)
         setupButton(document.querySelectorAll('.actuator-content .button')[1], '/work-press', '/work-release');
 
-        // Emergency Stop Button (Taster)
-        setupButton(document.querySelector('.emergency-button'), '/emstop-press', '/emstop-release');
+        // Emergency Stop Button (Schalter - NOT-AUS-Pilz)
+        // Logik: Gedrückt = xEM_STOP false, Nicht gedrückt = xEM_STOP true
+        const emergencyButton = document.querySelector('.emergency-button');
+        let emergencyPressed = false; // Lokaler Zustand
+
+        emergencyButton.addEventListener('click', async function() {
+            emergencyPressed = !emergencyPressed; // Toggle
+
+            if (emergencyPressed) {
+                // NOT-AUS gedrückt -> xEM_STOP = false
+                this.classList.add('pressed');
+                await callAPI('/set-emstop', { active: false });
+                console.log('NOT-AUS aktiviert (gedrückt) - xEM_STOP = false');
+            } else {
+                // NOT-AUS entriegelt -> xEM_STOP = true
+                this.classList.remove('pressed');
+                await callAPI('/set-emstop', { active: true });
+                console.log('NOT-AUS deaktiviert (entriegelt) - xEM_STOP = true');
+            }
+        });
 
         // Actuator Dropdown - Selection
         const actuatorDropdown = document.getElementById('actuatorDropdown');
@@ -287,6 +305,21 @@
                         resetButton.classList.add('lamp-white');
                     } else {
                         resetButton.classList.remove('lamp-white');
+                    }
+                }
+
+                // Emergency Stop Status synchronisieren
+                // xEM_STOP = false -> NOT-AUS gedrückt
+                // xEM_STOP = true -> NOT-AUS nicht gedrückt
+                if (status.emergencyStop !== undefined) {
+                    if (status.emergencyStop === false) {
+                        // NOT-AUS ist gedrückt
+                        emergencyButton.classList.add('pressed');
+                        emergencyPressed = true;
+                    } else {
+                        // NOT-AUS ist nicht gedrückt (normal)
+                        emergencyButton.classList.remove('pressed');
+                        emergencyPressed = false;
                     }
                 }
 

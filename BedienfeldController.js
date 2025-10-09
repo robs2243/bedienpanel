@@ -275,6 +275,7 @@ class BedienfeldController {
                 panelMan: await this.opcClient.readVariable(this.nodeIds.panelMan),
                 panelReset: await this.opcClient.readVariable(this.nodeIds.panelReset),
                 panelError: await this.opcClient.readVariable(this.nodeIds.panelError),
+                emergencyStop: await this.opcClient.readVariable(this.nodeIds.btnEmStop),
                 currentStep: await this.opcClient.readVariable(this.nodeIds.currentStep),
                 pvActuator: await this.opcClient.readVariable(this.nodeIds.pvActuator)
             };
@@ -310,25 +311,15 @@ class BedienfeldController {
     }
 
     /**
-     * Emergency Stop gedrückt
+     * Emergency Stop setzen (Schalter - NOT-AUS-Pilz)
+     * active = true -> xEM_STOP = true (NOT-AUS nicht gedrückt, normal)
+     * active = false -> xEM_STOP = false (NOT-AUS gedrückt, Maschine gestoppt)
      */
-    async emergencyStopPress() {
-        console.log("EMERGENCY STOP Taster gedrückt!");
+    async setEmergencyStop(active) {
+        console.log(`NOT-AUS: ${active ? 'ENTRIEGELT (normal)' : 'AKTIVIERT (gedrückt)'} - xEM_STOP = ${active}`);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnEmStop,
-            true,
-            DataType.Boolean
-        );
-    }
-
-    /**
-     * Emergency Stop losgelassen
-     */
-    async emergencyStopRelease() {
-        console.log("EMERGENCY STOP Taster losgelassen");
-        return await this.opcClient.writeVariable(
-            this.nodeIds.btnEmStop,
-            false,
+            active,
             DataType.Boolean
         );
     }
