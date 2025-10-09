@@ -4,46 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a German-language industrial control panel interface ("Bedienfeld") implemented as a single-page HTML application. The interface simulates a physical control panel with buttons, indicators, and controls for managing an automated tool system.
+This is a German-language industrial control panel interface ("Bedienfeld") for managing an automated tool system. The project includes an HTML/CSS frontend and has OPC UA capabilities for industrial automation communication.
+
+## File Structure
+
+- `bedienfeld.html` - Main HTML structure with embedded JavaScript
+- `bedienfeld.css` - Separated stylesheet with skeuomorphic industrial design
+- `package.json` - Node.js dependencies (node-opcua, node-opcua-samples)
+- `.gitignore` - Standard git ignore rules for editors, OS files, and node_modules
 
 ## Architecture
 
-**Single-File Application**: The entire application is contained in `bedienfeld.html` with embedded CSS and minimal JavaScript. There is no build process, package management, or external dependencies.
+**Frontend**: Clean separation of concerns with HTML, CSS, and minimal inline JavaScript. No build process required for the frontend.
 
-**Key Components**:
-- **Top Row**: Tool control buttons (Tool On/Off), Start/Stop buttons, and a Manual/Auto mode toggle switch
-- **Middle Row**: Status indicators (MAN, ERROR), current step display (00), and emergency stop button
-- **Actuator Section**: Home/Work positioning buttons and a dropdown selector for actuator selection
-- **Bottom Icons**: Three utility icons (home, warning, info)
+**Key UI Components**:
+- **Top Row**: Tool control buttons (Tool On/Off), Start/Stop buttons, Manual/Auto toggle switch, and Reset button
+- **Middle Row**: MAN and ERROR status indicators, current step display (00), and emergency stop button
+- **Actuator Section**: Home/Work positioning buttons and a dropdown selector
 
-**Styling Approach**: The UI uses a skeuomorphic design with gradients, shadows, and inset effects to mimic physical industrial control panels. The background features a dotted metal texture pattern.
+**Styling Approach**: Skeuomorphic design mimicking physical industrial control panels with gradients, shadows, inset effects, and a dotted metal texture background. Layout uses CSS Grid exclusively.
 
 ## Development Workflow
 
-**Running the Application**: Open `bedienfeld.html` directly in a web browser. No build or compilation step is required.
+**Frontend Development**:
+- Open `bedienfeld.html` directly in a web browser
+- No build step required
+- Refresh browser to see changes
 
-**Testing Changes**: Refresh the browser after making any modifications to see changes immediately.
+**Dependencies Management**:
+```bash
+npm install        # Install dependencies (node-opcua, node-opcua-samples)
+```
 
 ## Implementation Details
 
-**Toggle Switch State**: The only interactive JavaScript functionality is the Manual/Auto toggle at line 363-365. The toggle switches between states by adding/removing the `.active` class, which repositions the slider and changes the label via CSS.
+**Current State**: The UI is primarily static with minimal interactivity:
+- Toggle switch (bedienfeld.html:73-75) is the only interactive element - toggles between MAN/AUTO modes via CSS `.active` class
+- All other buttons have no event handlers implemented
+- Step display shows static "00" value (bedienfeld.html:50)
+- Actuator dropdown has only placeholder option (bedienfeld.html:65)
+- Status indicators are static gray circles with no active states
+- Emergency stop button is visual only
 
-**Language**: All UI text and labels are in German:
-- Toolcontrol = Tool Control
-- Toolmode = Tool Mode
-- Actuator Selection = Actuator Selection
-- Current Step = Current Step
-- Emergency STOP = Emergency Stop
+**Language**: All UI text is in German (Toolcontrol, Toolmode, Actuator Selection, Current Step, Emergency STOP)
 
-**Grid-Based Layout**: The entire layout uses CSS Grid extensively for positioning all elements. No flexbox or traditional positioning is used.
-
-**Button States**: Buttons have active states with visual feedback (translateY and shadow changes) but no actual functionality implemented.
-
-## Common Modifications
-
-When extending functionality, note that:
-- All buttons except the toggle switch currently have no JavaScript event handlers
-- The step display shows a static "00" value (line 334)
-- The actuator dropdown has only a placeholder option (line 349)
-- Status indicators are static gray circles with no active/inactive states implemented
-- The emergency stop button has no functionality beyond visual styling
+**Future Integration**: The node-opcua dependency suggests planned integration with industrial automation systems via OPC UA protocol for real machine control.

@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node api-server.js",
+    "server": "node opcua-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "node-opcua": "^2.157.0"
+    "node-opcua": "^2.157.0",
+    "node-opcua-samples": "^2.157.0"
   }
 }

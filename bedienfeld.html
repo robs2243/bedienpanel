@@ -69,10 +69,103 @@
     </div>
 
     <script>
-        // Toggle Switch Funktionalität
+        const API_URL = 'http://localhost:3001';
+
+        // Hilfsfunktion für API Aufrufe
+        async function callAPI(endpoint, body = null) {
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(API_URL + endpoint, options);
+                const data = await response.json();
+                console.log(`API Call ${endpoint}:`, data);
+                return data;
+            } catch (error) {
+                console.error(`Fehler bei API Call ${endpoint}:`, error);
+                alert('Fehler: Verbindung zum Server fehlgeschlagen');
+            }
+        }
+
+        // Tool On Button
+        document.querySelectorAll('.button')[0].addEventListener('click', function() {
+            console.log('Tool On Button gedrückt');
+            callAPI('/tool-on');
+        });
+
+        // Tool Off Button
+        document.querySelectorAll('.button')[1].addEventListener('click', function() {
+            console.log('Tool Off Button gedrückt');
+            callAPI('/tool-off');
+        });
+
+        // Start Button
+        document.querySelector('.button-green').addEventListener('click', function() {
+            console.log('Start Button gedrückt');
+            callAPI('/start');
+        });
+
+        // Stop Button
+        document.querySelector('.button-red').addEventListener('click', function() {
+            console.log('Stop Button gedrückt');
+            callAPI('/stop');
+        });
+
+        // Reset Button
+        document.querySelectorAll('.button-gray')[2].addEventListener('click', function() {
+            console.log('Reset Button gedrückt');
+            callAPI('/reset');
+        });
+
+        // Home Button
+        const homeButton = document.querySelectorAll('.actuator-content .button')[0];
+        homeButton.addEventListener('click', function() {
+            console.log('Home Button gedrückt');
+            // Hier könnte später Home-Position Logik implementiert werden
+        });
+
+        // Work Button
+        const workButton = document.querySelectorAll('.actuator-content .button')[1];
+        workButton.addEventListener('click', function() {
+            console.log('Work Button gedrückt');
+            // Hier könnte später Work-Position Logik implementiert werden
+        });
+
+        // Emergency Stop Button
+        document.querySelector('.emergency-button').addEventListener('click', function() {
+            console.log('EMERGENCY STOP gedrückt');
+            callAPI('/emergency-stop');
+        });
+
+        // Toggle Switch Funktionalität (Manual/Auto Mode)
         document.querySelector('.toggle-track').addEventListener('click', function() {
             this.classList.toggle('active');
+            const isManual = !this.classList.contains('active');
+            console.log(`Modus: ${isManual ? 'Manual' : 'Auto'}`);
+            callAPI('/set-mode', { manual: isManual });
         });
+
+        // Status regelmäßig aktualisieren (alle 2 Sekunden)
+        setInterval(async () => {
+            try {
+                const response = await fetch(API_URL + '/status');
+                const status = await response.json();
+
+                // Hier könnte UI Update Logik implementiert werden
+                // z.B. Indikatoren aktualisieren basierend auf status
+                console.log('Status Update:', status);
+            } catch (error) {
+                // Silent fail bei Status Updates
+            }
+        }, 2000);
     </script>
 </body>
 </html>
