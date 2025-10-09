@@ -1,17 +1,36 @@
 {
   "name": "bedienpanel",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "start-all.js",
   "scripts": {
     "start": "node start-all.js",
     "api": "node api-server.js",
     "server": "node opcua-server.js",
     "web": "node webserver.js",
+    "build": "pkg . --targets node18-win-x64 --output dist/bedienpanel.exe",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "start-all.js",
+  "pkg": {
+    "assets": [
+      "bedienfeld.html",
+      "bedienfeld.css",
+      "config.json",
+      "spsVars.json",
+      "node_modules/node-opcua/**/*"
+    ],
+    "scripts": [
+      "node_modules/node-opcua/**/*.js",
+      "node_modules/node-opcua-*/**/*.js"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "dist"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Industrial control panel for SPS automation",
   "dependencies": {
     "node-opcua": "^2.157.0",
     "node-opcua-samples": "^2.157.0"

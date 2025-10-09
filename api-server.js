@@ -226,16 +226,24 @@ class APIServer {
     }
 }
 
+// Hilfsfunktion: Datei-Pfad für pkg-kompatible Ausführung
+function getAssetPath(filename) {
+    if (process.pkg) {
+        return path.join(path.dirname(process.execPath), filename);
+    }
+    return path.join(__dirname, filename);
+}
+
 // Konfiguration laden
 function loadConfig() {
     try {
-        const configPath = path.join(__dirname, 'config.json');
+        const configPath = getAssetPath('config.json');
         const configData = fs.readFileSync(configPath, 'utf8');
         return JSON.parse(configData);
     } catch (error) {
         console.warn("Konnte config.json nicht laden, verwende Standardwerte");
         return {
-            opcua: { endpoint: "opc.tcp://localhost:4842" },
+            opcua: { endpoint: "opc.tcp://192.168.0.12:4840" },
             api: { port: 3001 }
         };
     }

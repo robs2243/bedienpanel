@@ -1,86 +1,95 @@
-const { spawn, exec } = require('child_process');
+const { exec } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+
+// Server-Module direkt laden (pkg-kompatibel)
+const WebServer = require('./webserver');
+const BedienfeldController = require('./BedienfeldController');
+const APIServer = require('./api-server');
+
+/**
+ * Hilfsfunktion: Datei-Pfad für pkg-kompatible Ausführung
+ */
+function getAssetPath(filename) {
+    if (process.pkg) {
+        return path.join(path.dirname(process.execPath), filename);
+    }
+    return path.join(__dirname, filename);
+}
+
+/**
+ * Konfiguration laden
+ */
+function loadConfig() {
+    try {
+        const configPath = getAssetPath('config.json');
+        const configData = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configData);
+    } catch (error) {
+        console.warn("Konnte config.json nicht laden, verwende Standardwerte");
+        return {
+            opcua: { endpoint: "opc.tcp://192.168.0.12:4840" },
+            api: { port: 3001 },
+            web: { port: 8080 }
+        };
+    }
+}
 
 /**
  * Startet alle drei Server: OPC UA Server, API Server und Web Server
  */
 class ApplicationStarter {
     constructor() {
-        this.processes = [];
-    }
-
-    /**
-     * Einen Node.js Prozess starten
-     */
-    startProcess(name, scriptPath, color) {
-        const process = spawn('node', [scriptPath], {
-            cwd: __dirname,
-            stdio: 'pipe'
-        });
-
-        // Output mit Farbe und Prefix anzeigen
-        process.stdout.on('data', (data) => {
-            const lines = data.toString().split('\n');
-            lines.forEach(line => {
-                if (line.trim()) {
-                    console.log(`${color}[${name}]${'\x1b[0m'} ${line}`);
-                }
-            });
-        });
-
-        process.stderr.on('data', (data) => {
-            const lines = data.toString().split('\n');
-            lines.forEach(line => {
-                if (line.trim()) {
-                    console.error(`${color}[${name}]${'\x1b[0m'} ${line}`);
-                }
-            });
-        });
-
-        process.on('close', (code) => {
-            console.log(`${color}[${name}]${'\x1b[0m'} Prozess beendet mit Code ${code}`);
-        });
-
-        this.processes.push({ name, process });
-        return process;
+        this.servers = {};
+        this.config = loadConfig();
     }
 
     /**
      * Alle Server starten
      */
-    start() {
+    async start() {
         console.log('\x1b[1m========================================');
         console.log('Bedienpanel Application wird gestartet...');
         console.log('========================================\x1b[0m\n');
 
-        // OPC UA Server starten (Blau)
-        console.log('\x1b[34m[INFO]\x1b[0m Starte OPC UA Server...');
-        this.startProcess('OPC-SERVER', path.join(__dirname, 'opcua-server.js'), '\x1b[34m');
-
-        // Kurze Verzögerung, damit der OPC UA Server Zeit hat zu starten
-        setTimeout(() => {
-            // API Server starten (Grün)
+        try {
+            // API Server starten (verbindet zu OPC UA)
             console.log('\x1b[32m[INFO]\x1b[0m Starte API Server...');
-            this.startProcess('API-SERVER', path.join(__dirname, 'api-server.js'), '\x1b[32m');
-        }, 2000);
+            const APIServerClass = require('./api-server');
+            // API Server startet sich selbst beim require (siehe api-server.js)
 
-        // Web Server starten (Gelb)
-        setTimeout(() => {
+            // Kurze Verzögerung
+            await this.delay(2000);
+
+            // Web Server starten
             console.log('\x1b[33m[INFO]\x1b[0m Starte Web Server...');
-            this.startProcess('WEB-SERVER', path.join(__dirname, 'webserver.js'), '\x1b[33m');
+            const webPort = this.config.web.port || 8080;
+            this.servers.web = new WebServer(webPort);
+            this.servers.web.start();
 
-            setTimeout(() => {
-                console.log('\n\x1b[1m========================================');
-                console.log('✓ Alle Server gestartet!');
-                console.log('========================================\x1b[0m');
-                console.log('\n\x1b[36mBedienfeld öffnen:\x1b[0m http://localhost:8080');
+            await this.delay(1000);
 
-                // Browser öffnen
-                this.openBrowser('http://localhost:8080');
+            console.log('\n\x1b[1m========================================');
+            console.log('✓ Alle Server gestartet!');
+            console.log('========================================\x1b[0m');
+            console.log(`\n\x1b[36mBedienfeld öffnen:\x1b[0m http://localhost:${webPort}`);
 
-                console.log('\n\x1b[90mDrücke Ctrl+C zum Beenden...\x1b[0m\n');
-            }, 1000);
-        }, 3000);
+            // Browser öffnen
+            this.openBrowser(`http://localhost:${webPort}`);
+
+            console.log('\n\x1b[90mDrücke Ctrl+C zum Beenden...\x1b[0m\n');
+
+        } catch (error) {
+            console.error('\x1b[31m[FEHLER]\x1b[0m Fehler beim Starten:', error);
+            process.exit(1);
+        }
+    }
+
+    /**
+     * Delay-Hilfsfunktion
+     */
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
@@ -113,17 +122,17 @@ class ApplicationStarter {
     }
 
     /**
-     * Alle Prozesse beenden
+     * Alle Server beenden
      */
     stop() {
         console.log('\n\x1b[1m========================================');
         console.log('Server werden heruntergefahren...');
         console.log('========================================\x1b[0m\n');
 
-        this.processes.forEach(({ name, process }) => {
-            console.log(`Stoppe ${name}...`);
-            process.kill('SIGINT');
-        });
+        if (this.servers.web) {
+            console.log('Stoppe Web Server...');
+            this.servers.web.stop();
+        }
 
         // Warte kurz und beende dann den Hauptprozess
         setTimeout(() => {
@@ -135,7 +144,10 @@ class ApplicationStarter {
 
 // Application starten
 const app = new ApplicationStarter();
-app.start();
+app.start().catch(err => {
+    console.error('\x1b[31m[FEHLER]\x1b[0m', err);
+    process.exit(1);
+});
 
 // Graceful shutdown bei Ctrl+C
 process.on('SIGINT', () => {

@@ -4,6 +4,18 @@ const fs = require("fs");
 const path = require("path");
 
 /**
+ * Hilfsfunktion: Datei-Pfad für pkg-kompatible Ausführung
+ * Wenn in pkg gebündelt, liegen Assets im Snapshot-Verzeichnis
+ */
+function getAssetPath(filename) {
+    // pkg setzt process.pkg zur Laufzeit
+    if (process.pkg) {
+        return path.join(path.dirname(process.execPath), filename);
+    }
+    return path.join(__dirname, filename);
+}
+
+/**
  * Controller Klasse für das Bedienfeld
  * Verwaltet die Kommunikation zwischen UI und OPC UA Server
  */
@@ -12,7 +24,7 @@ class BedienfeldController {
         this.opcClient = new OPCUAClientManager(serverEndpoint);
 
         // SPS Variablen aus spsVars.json laden
-        const spsVarsPath = path.join(__dirname, 'spsVars.json');
+        const spsVarsPath = getAssetPath('spsVars.json');
         const spsVars = JSON.parse(fs.readFileSync(spsVarsPath, 'utf8'));
 
         // Node IDs für die verschiedenen SPS-Variablen

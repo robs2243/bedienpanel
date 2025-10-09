@@ -3,12 +3,24 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Hilfsfunktion: Datei-Pfad für pkg-kompatible Ausführung
+ */
+function getAssetPath(filename) {
+    if (process.pkg) {
+        return path.join(path.dirname(process.execPath), filename);
+    }
+    return path.join(__dirname, filename);
+}
+
+/**
  * Minimalistischer Web-Server für das Bedienfeld
  */
 class WebServer {
     constructor(port = 8080) {
         this.port = port;
         this.server = null;
+        // Base-Verzeichnis für Assets (pkg-kompatibel)
+        this.baseDir = process.pkg ? path.dirname(process.execPath) : __dirname;
     }
 
     /**
@@ -62,11 +74,11 @@ class WebServer {
             filePath = '/bedienfeld.html';
         }
 
-        // Vollständiger Pfad
-        filePath = path.join(__dirname, filePath);
+        // Vollständiger Pfad (pkg-kompatibel)
+        filePath = path.join(this.baseDir, filePath);
 
         // Sicherheitscheck: Verhindere Directory Traversal
-        if (!filePath.startsWith(__dirname)) {
+        if (!filePath.startsWith(this.baseDir)) {
             res.writeHead(403, { 'Content-Type': 'text/plain' });
             res.end('403 - Zugriff verweigert');
             return;
@@ -105,7 +117,7 @@ class WebServer {
 // Konfiguration laden
 function loadConfig() {
     try {
-        const configPath = path.join(__dirname, 'config.json');
+        const configPath = getAssetPath('config.json');
         const configData = fs.readFileSync(configPath, 'utf8');
         return JSON.parse(configData);
     } catch (error) {
