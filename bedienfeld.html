@@ -218,7 +218,7 @@
         const manIndicator = document.getElementById('manIndicator');
         const errorIndicator = document.getElementById('errorIndicator');
 
-        // Status regelmäßig aktualisieren (alle 2 Sekunden)
+        // Status regelmäßig aktualisieren (jede Sekunde)
         setInterval(async () => {
             try {
                 const response = await fetch(API_URL + '/status');
@@ -257,7 +257,7 @@
             } catch (error) {
                 // Silent fail bei Status Updates
             }
-        }, 2000);
+        }, 1000);
 
         // ========== Settings Modal Funktionalität ==========
 
