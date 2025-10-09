@@ -39,6 +39,7 @@ class APIServer {
                 console.log("  POST /work-press / /work-release          - Work Taster");
                 console.log("  POST /emstop-press / /emstop-release      - Emergency Stop");
                 console.log("  POST /set-mode       - Modus setzen (body: {manual: true/false})");
+                console.log("  POST /set-actuator   - Actuator wählen (body: {actuator: 1-10})");
                 console.log("  POST /reconnect      - Server-Verbindung ändern (body: {endpoint: string})");
                 console.log("  GET  /status         - Alle Werte lesen");
                 console.log("  GET  /config         - Aktuelle Konfiguration lesen");
@@ -157,6 +158,11 @@ class APIServer {
             case '/set-mode':
                 if (data.manual !== undefined) {
                     result = await this.controller.setManualMode(data.manual);
+                }
+                break;
+            case '/set-actuator':
+                if (data.actuator !== undefined) {
+                    result = await this.controller.setActuator(data.actuator);
                 }
                 break;
             case '/reconnect':

@@ -204,6 +204,18 @@ class BedienfeldController {
     }
 
     /**
+     * Actuator auswählen (1-10)
+     */
+    async setActuator(actuatorNumber) {
+        console.log(`Actuator ${actuatorNumber} ausgewählt`);
+        return await this.opcClient.writeVariable(
+            this.nodeIds.pvActuator,
+            actuatorNumber,
+            DataType.Int16
+        );
+    }
+
+    /**
      * Home-Button gedrückt
      */
     async toHomePress() {

@@ -96,8 +96,17 @@
             <div class="actuator-content">
                 <button class="button button-gray">Home</button>
                 <button class="button button-gray">Work</button>
-                <select class="dropdown">
-                    <option>- - - - -</option>
+                <select class="dropdown" id="actuatorDropdown">
+                    <option value="1">Actuator 1</option>
+                    <option value="2">Actuator 2</option>
+                    <option value="3">Actuator 3</option>
+                    <option value="4">Actuator 4</option>
+                    <option value="5">Actuator 5</option>
+                    <option value="6">Actuator 6</option>
+                    <option value="7">Actuator 7</option>
+                    <option value="8">Actuator 8</option>
+                    <option value="9">Actuator 9</option>
+                    <option value="10">Actuator 10</option>
                 </select>
             </div>
         </div>
@@ -189,6 +198,14 @@
         // Emergency Stop Button (Taster)
         setupButton(document.querySelector('.emergency-button'), '/emstop-press', '/emstop-release');
 
+        // Actuator Dropdown - Selection
+        const actuatorDropdown = document.getElementById('actuatorDropdown');
+        actuatorDropdown.addEventListener('change', function() {
+            const selectedActuator = parseInt(this.value);
+            console.log(`Actuator ${selectedActuator} ausgewählt`);
+            callAPI('/set-actuator', { actuator: selectedActuator });
+        });
+
         // Toggle Switch Funktionalität (Manual/Auto Mode)
         document.querySelector('.toggle-track').addEventListener('click', function() {
             this.classList.toggle('active');
@@ -203,8 +220,17 @@
                 const response = await fetch(API_URL + '/status');
                 const status = await response.json();
 
-                // Hier könnte UI Update Logik implementiert werden
-                // z.B. Indikatoren aktualisieren basierend auf status
+                // Current Step aktualisieren
+                if (status.currentStep !== undefined) {
+                    const stepDisplay = document.querySelector('.step-value');
+                    stepDisplay.textContent = String(status.currentStep).padStart(2, '0');
+                }
+
+                // PV Actuator aktualisieren (Dropdown-Auswahl synchronisieren)
+                if (status.pvActuator !== undefined && status.pvActuator >= 1 && status.pvActuator <= 10) {
+                    actuatorDropdown.value = status.pvActuator;
+                }
+
                 console.log('Status Update:', status);
             } catch (error) {
                 // Silent fail bei Status Updates
