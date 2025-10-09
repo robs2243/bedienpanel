@@ -30,15 +30,15 @@ class APIServer {
                 console.log(`Endpoint: http://localhost:${this.port}`);
                 console.log("========================================");
                 console.log("\nVerfügbare API Endpoints:");
-                console.log("  POST /start          - Start Button");
-                console.log("  POST /stop           - Stop Button");
-                console.log("  POST /tool-on        - Tool On");
-                console.log("  POST /tool-off       - Tool Off");
+                console.log("  POST /start-press / /start-release        - Start Taster");
+                console.log("  POST /stop-press / /stop-release          - Stop Taster");
+                console.log("  POST /tool-on-press / /tool-on-release    - Tool On Taster");
+                console.log("  POST /tool-off-press / /tool-off-release  - Tool Off Taster");
+                console.log("  POST /reset-press / /reset-release        - Reset Taster");
+                console.log("  POST /home-press / /home-release          - Home Taster");
+                console.log("  POST /work-press / /work-release          - Work Taster");
+                console.log("  POST /emstop-press / /emstop-release      - Emergency Stop");
                 console.log("  POST /set-mode       - Modus setzen (body: {manual: true/false})");
-                console.log("  POST /to-home        - Home Position anfahren");
-                console.log("  POST /to-work        - Work Position anfahren");
-                console.log("  POST /reset          - Reset");
-                console.log("  POST /emergency-stop - Emergency Stop");
                 console.log("  POST /reconnect      - Server-Verbindung ändern (body: {endpoint: string})");
                 console.log("  GET  /status         - Alle Werte lesen");
                 console.log("  GET  /config         - Aktuelle Konfiguration lesen");
@@ -106,34 +106,58 @@ class APIServer {
 
         // Route handling
         switch (url) {
-            case '/start':
-                result = await this.controller.start();
+            case '/start-press':
+                result = await this.controller.startPress();
                 break;
-            case '/stop':
-                result = await this.controller.stop();
+            case '/start-release':
+                result = await this.controller.startRelease();
                 break;
-            case '/tool-on':
-                result = await this.controller.toolOn();
+            case '/stop-press':
+                result = await this.controller.stopPress();
                 break;
-            case '/tool-off':
-                result = await this.controller.toolOff();
+            case '/stop-release':
+                result = await this.controller.stopRelease();
+                break;
+            case '/tool-on-press':
+                result = await this.controller.toolOnPress();
+                break;
+            case '/tool-on-release':
+                result = await this.controller.toolOnRelease();
+                break;
+            case '/tool-off-press':
+                result = await this.controller.toolOffPress();
+                break;
+            case '/tool-off-release':
+                result = await this.controller.toolOffRelease();
+                break;
+            case '/reset-press':
+                result = await this.controller.resetPress();
+                break;
+            case '/reset-release':
+                result = await this.controller.resetRelease();
+                break;
+            case '/home-press':
+                result = await this.controller.toHomePress();
+                break;
+            case '/home-release':
+                result = await this.controller.toHomeRelease();
+                break;
+            case '/work-press':
+                result = await this.controller.toWorkPress();
+                break;
+            case '/work-release':
+                result = await this.controller.toWorkRelease();
+                break;
+            case '/emstop-press':
+                result = await this.controller.emergencyStopPress();
+                break;
+            case '/emstop-release':
+                result = await this.controller.emergencyStopRelease();
                 break;
             case '/set-mode':
                 if (data.manual !== undefined) {
                     result = await this.controller.setManualMode(data.manual);
                 }
-                break;
-            case '/to-home':
-                result = await this.controller.toHomePosition();
-                break;
-            case '/to-work':
-                result = await this.controller.toWorkPosition();
-                break;
-            case '/reset':
-                result = await this.controller.reset();
-                break;
-            case '/emergency-stop':
-                result = await this.controller.emergencyStop();
                 break;
             case '/reconnect':
                 if (data.endpoint) {

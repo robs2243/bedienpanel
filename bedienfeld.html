@@ -130,55 +130,64 @@
             }
         }
 
-        // Tool On Button
-        document.querySelectorAll('.button')[0].addEventListener('click', function() {
-            console.log('Tool On Button gedrückt');
-            callAPI('/tool-on');
-        });
+        // Hilfsfunktion für Taster-Verhalten (Press & Release)
+        function setupButton(element, pressEndpoint, releaseEndpoint) {
+            // Mouse Events
+            element.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                callAPI(pressEndpoint);
+            });
 
-        // Tool Off Button
-        document.querySelectorAll('.button')[1].addEventListener('click', function() {
-            console.log('Tool Off Button gedrückt');
-            callAPI('/tool-off');
-        });
+            element.addEventListener('mouseup', (e) => {
+                e.preventDefault();
+                callAPI(releaseEndpoint);
+            });
 
-        // Start Button
-        document.querySelector('.button-green').addEventListener('click', function() {
-            console.log('Start Button gedrückt');
-            callAPI('/start');
-        });
+            element.addEventListener('mouseleave', (e) => {
+                // Wenn Maus den Button verlässt während gedrückt, auch release senden
+                callAPI(releaseEndpoint);
+            });
 
-        // Stop Button
-        document.querySelector('.button-red').addEventListener('click', function() {
-            console.log('Stop Button gedrückt');
-            callAPI('/stop');
-        });
+            // Touch Events für Touch-Displays
+            element.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                callAPI(pressEndpoint);
+            });
 
-        // Reset Button
-        document.querySelectorAll('.button-gray')[2].addEventListener('click', function() {
-            console.log('Reset Button gedrückt');
-            callAPI('/reset');
-        });
+            element.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                callAPI(releaseEndpoint);
+            });
 
-        // Home Button
-        const homeButton = document.querySelectorAll('.actuator-content .button')[0];
-        homeButton.addEventListener('click', function() {
-            console.log('Home Button gedrückt');
-            callAPI('/to-home');
-        });
+            element.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                callAPI(releaseEndpoint);
+            });
+        }
 
-        // Work Button
-        const workButton = document.querySelectorAll('.actuator-content .button')[1];
-        workButton.addEventListener('click', function() {
-            console.log('Work Button gedrückt');
-            callAPI('/to-work');
-        });
+        // Tool On Button (Taster)
+        setupButton(document.querySelectorAll('.button')[0], '/tool-on-press', '/tool-on-release');
 
-        // Emergency Stop Button
-        document.querySelector('.emergency-button').addEventListener('click', function() {
-            console.log('EMERGENCY STOP gedrückt');
-            callAPI('/emergency-stop');
-        });
+        // Tool Off Button (Taster)
+        setupButton(document.querySelectorAll('.button')[1], '/tool-off-press', '/tool-off-release');
+
+        // Start Button (Taster)
+        setupButton(document.querySelector('.button-green'), '/start-press', '/start-release');
+
+        // Stop Button (Taster)
+        setupButton(document.querySelector('.button-red'), '/stop-press', '/stop-release');
+
+        // Reset Button (Taster)
+        setupButton(document.querySelectorAll('.button-gray')[2], '/reset-press', '/reset-release');
+
+        // Home Button (Taster)
+        setupButton(document.querySelectorAll('.actuator-content .button')[0], '/home-press', '/home-release');
+
+        // Work Button (Taster)
+        setupButton(document.querySelectorAll('.actuator-content .button')[1], '/work-press', '/work-release');
+
+        // Emergency Stop Button (Taster)
+        setupButton(document.querySelector('.emergency-button'), '/emstop-press', '/emstop-release');
 
         // Toggle Switch Funktionalität (Manual/Auto Mode)
         document.querySelector('.toggle-track').addEventListener('click', function() {

@@ -95,10 +95,10 @@ class BedienfeldController {
     }
 
     /**
-     * Start-Button Aktion
+     * Start-Button gedrückt
      */
-    async start() {
-        console.log("Start-Befehl ausgeführt");
+    async startPress() {
+        console.log("Start-Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnStart,
             true,
@@ -107,10 +107,22 @@ class BedienfeldController {
     }
 
     /**
-     * Stop-Button Aktion
+     * Start-Button losgelassen
      */
-    async stop() {
-        console.log("Stop-Befehl ausgeführt");
+    async startRelease() {
+        console.log("Start-Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnStart,
+            false,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Stop-Button gedrückt
+     */
+    async stopPress() {
+        console.log("Stop-Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnStop,
             true,
@@ -119,10 +131,22 @@ class BedienfeldController {
     }
 
     /**
-     * Tool On Aktion
+     * Stop-Button losgelassen
      */
-    async toolOn() {
-        console.log("Tool On");
+    async stopRelease() {
+        console.log("Stop-Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnStop,
+            false,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Tool On gedrückt
+     */
+    async toolOnPress() {
+        console.log("Tool On Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToolOn,
             true,
@@ -131,13 +155,37 @@ class BedienfeldController {
     }
 
     /**
-     * Tool Off Aktion
+     * Tool On losgelassen
      */
-    async toolOff() {
-        console.log("Tool Off");
+    async toolOnRelease() {
+        console.log("Tool On Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnToolOn,
+            false,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Tool Off gedrückt
+     */
+    async toolOffPress() {
+        console.log("Tool Off Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToolOff,
             true,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Tool Off losgelassen
+     */
+    async toolOffRelease() {
+        console.log("Tool Off Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnToolOff,
+            false,
             DataType.Boolean
         );
     }
@@ -156,10 +204,10 @@ class BedienfeldController {
     }
 
     /**
-     * Home Position anfahren
+     * Home-Button gedrückt
      */
-    async toHomePosition() {
-        console.log("Home Position anfahren");
+    async toHomePress() {
+        console.log("Home Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToHomePos,
             true,
@@ -168,13 +216,37 @@ class BedienfeldController {
     }
 
     /**
-     * Work Position anfahren
+     * Home-Button losgelassen
      */
-    async toWorkPosition() {
-        console.log("Work Position anfahren");
+    async toHomeRelease() {
+        console.log("Home Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnToHomePos,
+            false,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Work-Button gedrückt
+     */
+    async toWorkPress() {
+        console.log("Work Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToWorkPos,
             true,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Work-Button losgelassen
+     */
+    async toWorkRelease() {
+        console.log("Work Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnToWorkPos,
+            false,
             DataType.Boolean
         );
     }
@@ -201,10 +273,10 @@ class BedienfeldController {
     }
 
     /**
-     * Reset-Funktion
+     * Reset-Button gedrückt
      */
-    async reset() {
-        console.log("Reset ausgeführt");
+    async resetPress() {
+        console.log("Reset Taster gedrückt");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnReset,
             true,
@@ -213,13 +285,37 @@ class BedienfeldController {
     }
 
     /**
-     * Emergency Stop
+     * Reset-Button losgelassen
      */
-    async emergencyStop() {
-        console.log("EMERGENCY STOP!");
+    async resetRelease() {
+        console.log("Reset Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnReset,
+            false,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Emergency Stop gedrückt
+     */
+    async emergencyStopPress() {
+        console.log("EMERGENCY STOP Taster gedrückt!");
         return await this.opcClient.writeVariable(
             this.nodeIds.btnEmStop,
             true,
+            DataType.Boolean
+        );
+    }
+
+    /**
+     * Emergency Stop losgelassen
+     */
+    async emergencyStopRelease() {
+        console.log("EMERGENCY STOP Taster losgelassen");
+        return await this.opcClient.writeVariable(
+            this.nodeIds.btnEmStop,
+            false,
             DataType.Boolean
         );
     }
