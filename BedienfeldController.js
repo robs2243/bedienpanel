@@ -27,6 +27,9 @@ class BedienfeldController {
         const spsVarsPath = getAssetPath('spsVars.json');
         const spsVars = JSON.parse(fs.readFileSync(spsVarsPath, 'utf8'));
 
+        // SPS Variablen speichern für contactType-Prüfung
+        this.spsVars = spsVars;
+
         // Node IDs für die verschiedenen SPS-Variablen
         this.nodeIds = {
             // Button Inputs (von Bedienfeld zu SPS)
@@ -107,6 +110,22 @@ class BedienfeldController {
     }
 
     /**
+     * Hilfsfunktion: Wert invertieren falls Variable ein Öffner (NC) ist
+     * @param {string} varName - Name der Variable in spsVars (z.B. 'xBTN_STOP')
+     * @param {boolean} value - Der ursprüngliche Wert
+     * @returns {boolean} - Invertierter Wert falls NC, sonst original Wert
+     */
+    invertValueIfNeeded(varName, value) {
+        // Prüfen ob Variable existiert und contactType hat
+        if (this.spsVars[varName] && this.spsVars[varName].contactType === 'NC') {
+            // Bei Öffnern (NC) Wert invertieren
+            return !value;
+        }
+        // Bei Schließern (NO) oder fehlenden contactType: Wert unverändert
+        return value;
+    }
+
+    /**
      * Start-Button gedrückt
      */
     async startPress() {
@@ -135,9 +154,10 @@ class BedienfeldController {
      */
     async stopPress() {
         console.log("Stop-Taster gedrückt");
+        const value = this.invertValueIfNeeded('xBTN_STOP', true);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnStop,
-            true,
+            value,
             DataType.Boolean
         );
     }
@@ -147,9 +167,10 @@ class BedienfeldController {
      */
     async stopRelease() {
         console.log("Stop-Taster losgelassen");
+        const value = this.invertValueIfNeeded('xBTN_STOP', false);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnStop,
-            false,
+            value,
             DataType.Boolean
         );
     }
@@ -183,9 +204,10 @@ class BedienfeldController {
      */
     async toolOffPress() {
         console.log("Tool Off Taster gedrückt");
+        const value = this.invertValueIfNeeded('xBTN_TOOL_OFF', true);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToolOff,
-            true,
+            value,
             DataType.Boolean
         );
     }
@@ -195,9 +217,10 @@ class BedienfeldController {
      */
     async toolOffRelease() {
         console.log("Tool Off Taster losgelassen");
+        const value = this.invertValueIfNeeded('xBTN_TOOL_OFF', false);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnToolOff,
-            false,
+            value,
             DataType.Boolean
         );
     }
@@ -208,9 +231,10 @@ class BedienfeldController {
      */
     async setManualMode(isManual) {
         console.log(`Modus: ${isManual ? 'Manual' : 'Auto'}`);
+        const value = this.invertValueIfNeeded('xMAN_AUTO', isManual);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnManAuto,
-            isManual,
+            value,
             DataType.Boolean
         );
     }
@@ -280,6 +304,9 @@ class BedienfeldController {
      */
     async readAllValues() {
         try {
+            // Werte vom OPC UA Server lesen
+            const emergencyStopRaw = await this.opcClient.readVariable(this.nodeIds.btnEmStop);
+
             const values = {
                 // Panel Status (von SPS)
                 panelToolOn: await this.opcClient.readVariable(this.nodeIds.panelToolOn),
@@ -287,7 +314,8 @@ class BedienfeldController {
                 panelMan: await this.opcClient.readVariable(this.nodeIds.panelMan),
                 panelReset: await this.opcClient.readVariable(this.nodeIds.panelReset),
                 panelError: await this.opcClient.readVariable(this.nodeIds.panelError),
-                emergencyStop: await this.opcClient.readVariable(this.nodeIds.btnEmStop),
+                // Emergency Stop: Wert invertieren falls NC (Öffner)
+                emergencyStop: this.invertValueIfNeeded('xEM_STOP', emergencyStopRaw),
                 currentStep: await this.opcClient.readVariable(this.nodeIds.currentStep),
                 pvActuator: await this.opcClient.readVariable(this.nodeIds.pvActuator)
             };
@@ -328,10 +356,11 @@ class BedienfeldController {
      * active = false -> xEM_STOP = false (NOT-AUS gedrückt, Maschine gestoppt)
      */
     async setEmergencyStop(active) {
-        console.log(`NOT-AUS: ${active ? 'ENTRIEGELT (normal)' : 'AKTIVIERT (gedrückt)'} - xEM_STOP = ${active}`);
+        const value = this.invertValueIfNeeded('xEM_STOP', active);
+        console.log(`NOT-AUS: ${active ? 'ENTRIEGELT (normal)' : 'AKTIVIERT (gedrückt)'} - xEM_STOP = ${value}`);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnEmStop,
-            active,
+            value,
             DataType.Boolean
         );
     }

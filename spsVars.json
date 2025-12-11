@@ -2,81 +2,97 @@
   "xBTN_START": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xBTN_START\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xBTN_STOP": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xBTN_STOP\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NC"
   },
   "xBTN_TOOL_ON": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xBTN_TOOL_ON\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xBTN_TOOL_OFF": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xBTN_TOOL_OFF\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NC"
   },
   "xBTN_RESET": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xBTN_RESET\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xMAN_AUTO": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xMAN_AUTO\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NC"
   },
   "xEM_STOP": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xEM_STOP\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NC"
   },
   "xP_TOOL_ON": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xP_TOOL_ON\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xP_START": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xP_START\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xP_MAN": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xP_MAN\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xP_RESET": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xP_RESET\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xP_ERROR": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xP_ERROR\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xTO_WORKPOS": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xTO_WORKPOS\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "xTO_HOMEPOS": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"xTO_HOMEPOS\"",
-    "datatype": "Bool"
+    "datatype": "Bool",
+    "contactType": "NO"
   },
   "iCURRENT_STEP": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"iCURRENT_STEP\"",
-    "datatype": "Int16"
+    "datatype": "Int16",
+    "contactType": "NO"
   },
   "iPV_ACTUATOR": {
     "ns": 3,
     "s": "\"dbBedienfeld\".\"iPV_ACTUATOR\"",
-    "datatype": "Int16"
+    "datatype": "Int16",
+    "contactType": "NO"
   }
 }
