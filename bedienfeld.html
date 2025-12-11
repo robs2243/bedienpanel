@@ -242,7 +242,7 @@
         const startButton = document.querySelector('.button-green');
         const resetButton = document.querySelectorAll('.button-gray')[2];
 
-        // Status regelmäßig aktualisieren (jede Sekunde)
+        // Status regelmäßig aktualisieren (jede 100 ms)
         setInterval(async () => {
             try {
                 const response = await fetch(API_URL + '/status');
@@ -327,7 +327,7 @@
             } catch (error) {
                 // Silent fail bei Status Updates
             }
-        }, 1000);
+        }, 100); // war vorher 1000 ms
 
         // ========== Settings Modal Funktionalität ==========
 

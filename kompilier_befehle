@@ -1,0 +1,4 @@
+pkg . --targets node18-win-x64 --output dist/bedienpanel.exe
+pkg start-all.js --targets node20-win-x64 --output bedienpanel.exe
+
+node .\start-all.js
