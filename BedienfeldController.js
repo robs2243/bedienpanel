@@ -304,9 +304,6 @@ class BedienfeldController {
      */
     async readAllValues() {
         try {
-            // Werte vom OPC UA Server lesen
-            const emergencyStopRaw = await this.opcClient.readVariable(this.nodeIds.btnEmStop);
-
             const values = {
                 // Panel Status (von SPS)
                 panelToolOn: await this.opcClient.readVariable(this.nodeIds.panelToolOn),
@@ -314,8 +311,8 @@ class BedienfeldController {
                 panelMan: await this.opcClient.readVariable(this.nodeIds.panelMan),
                 panelReset: await this.opcClient.readVariable(this.nodeIds.panelReset),
                 panelError: await this.opcClient.readVariable(this.nodeIds.panelError),
-                // Emergency Stop: Wert invertieren falls NC (Öffner)
-                emergencyStop: this.invertValueIfNeeded('xEM_STOP', emergencyStopRaw),
+                // Emergency Stop: Direkter Wert ohne Invertierung (Schalter-Logik)
+                emergencyStop: await this.opcClient.readVariable(this.nodeIds.btnEmStop),
                 currentStep: await this.opcClient.readVariable(this.nodeIds.currentStep),
                 pvActuator: await this.opcClient.readVariable(this.nodeIds.pvActuator)
             };
@@ -354,13 +351,15 @@ class BedienfeldController {
      * Emergency Stop setzen (Schalter - NOT-AUS-Pilz)
      * active = true -> xEM_STOP = true (NOT-AUS nicht gedrückt, normal)
      * active = false -> xEM_STOP = false (NOT-AUS gedrückt, Maschine gestoppt)
+     *
+     * WICHTIG: Bei NOT-AUS als Schalter wird NICHT invertiert, auch wenn NC!
+     * Der 'active' Wert vom Frontend entspricht direkt dem logischen Zustand.
      */
     async setEmergencyStop(active) {
-        const value = this.invertValueIfNeeded('xEM_STOP', active);
-        console.log(`NOT-AUS: ${active ? 'ENTRIEGELT (normal)' : 'AKTIVIERT (gedrückt)'} - xEM_STOP = ${value}`);
+        console.log(`NOT-AUS: ${active ? 'ENTRIEGELT (normal)' : 'AKTIVIERT (gedrückt)'} - xEM_STOP = ${active}`);
         return await this.opcClient.writeVariable(
             this.nodeIds.btnEmStop,
-            value,
+            active,
             DataType.Boolean
         );
     }
