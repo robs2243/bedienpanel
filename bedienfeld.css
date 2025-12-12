@@ -9,8 +9,9 @@ body {
     background: radial-gradient(circle, #999 1px, transparent 1px);
     background-size: 8px 8px;
     background-color: #b0b0b0;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
     padding: 20px;
 }
@@ -19,44 +20,80 @@ body {
     background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
     border: 3px solid #888;
     border-radius: 15px;
-    padding: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
-    max-width: 1000px;
-    width: 100%;
-    display: grid;
-    gap: 25px;
+    width: 1000px;
+    height: 550px;
+    position: relative;
 }
 
-.section-title {
+/* ========== Labels ========== */
+.label-toolcontrol,
+.label-toolmode,
+.label-reset,
+.label-man,
+.label-error,
+.label-step,
+.label-emergency,
+.label-actuator {
+    position: absolute;
     font-size: 18px;
     font-weight: bold;
     color: #2c3e50;
     text-align: center;
 }
 
-.top-row {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 20px;
-    justify-content: space-between;
-    align-items: end;
+.label-toolcontrol {
+    top: 30px;
+    left: 40px;
+    width: 250px;
 }
 
-.control-group {
-    display: grid;
-    gap: 10px;
-    justify-items: center;
+.label-toolmode {
+    top: 30px;
+    left: 600px;
+    width: 140px;
 }
 
-.button-row {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 10px;
-    align-items: end;
-    justify-content: center;
+.label-reset {
+    top: 30px;
+    right: 30px;
+    width: 150px;
+    text-align: center;
 }
 
+.label-man {
+    top: 205px;
+    left: 80px;
+    width: 150px;
+}
+
+.label-error {
+    top: 205px;
+    left: 300px;
+    width: 150px;
+}
+
+.label-step {
+    top: 205px;
+    left: 510px;
+    width: 180px;
+}
+
+.label-emergency {
+    top: 205px;
+    left: 750px;
+    width: 150px;
+}
+
+.label-actuator {
+    top: 370px;
+    left: 50px;
+    width: 900px;
+}
+
+/* ========== Buttons ========== */
 .button {
+    position: absolute;
     padding: 18px 35px;
     font-size: 18px;
     font-weight: bold;
@@ -94,6 +131,42 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
+/* Button Positions */
+#toolOnBtn {
+    top: 60px;
+    left: 30px;
+}
+
+#toolOffBtn {
+    top: 60px;
+    left: 155px;
+}
+
+#startBtn {
+    top: 60px; /*120*/
+    left: 340px;
+}
+
+#stopBtn {
+    top: 60px;
+    left: 470px;
+}
+
+#resetBtn {
+    top: 60px;
+    right: 30px;
+}
+
+#homeBtn {
+    top: 425px;
+    left: 80px;
+}
+
+#workBtn {
+    top: 425px;
+    left: 220px;
+}
+
 /* Button Lamp Styles */
 .button.lamp-blue {
     background: radial-gradient(circle at 30% 30%, #2196f3 0%, #1565c0 100%);
@@ -116,166 +189,19 @@ body {
     text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
 }
 
-.middle-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    align-items: center;
-    justify-items: center;
-}
-
-.indicator-group {
-    display: grid;
-    gap: 8px;
-    justify-items: center;
-}
-
-.indicator {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6a6a6a 0%, #4a4a4a 100%);
-    box-shadow: inset 0 3px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
-
-/* MAN Indicator - Grün wenn aktiv */
-.indicator.man-active {
-    background: radial-gradient(circle at 30% 30%, #4caf50 0%, #2e7d32 100%);
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.8), inset 0 3px 8px rgba(0,0,0,0.2);
-}
-
-/* ERROR Indicator - Rot durchgehend wenn aktiv */
-.indicator.error-active {
-    background: radial-gradient(circle at 30% 30%, #f44336 0%, #c62828 100%);
-    box-shadow: 0 0 20px rgba(244, 67, 54, 0.8), inset 0 3px 8px rgba(0,0,0,0.2);
-}
-
-.indicator-label {
-    font-weight: bold;
-    color: #2c3e50;
-    font-size: 16px;
-}
-
-.step-display {
-    display: grid;
-    gap: 10px;
-    justify-items: center;
-}
-
-.step-value {
-    background: white;
-    border: 3px solid #666;
-    padding: 15px 40px;
-    font-size: 36px;
-    font-weight: bold;
-    border-radius: 5px;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.emergency-stop {
-    display: grid;
-    gap: 8px;
-    justify-items: center;
-}
-
-.emergency-button {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #cc0000 0%, #990000 100%);
-    border: 8px solid #ffeb3b;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-/* NOT-AUS gedrückt (eingerastet) - Pilz erscheint tiefer und leuchtet rot */
-.emergency-button.pressed {
-    transform: translateY(8px);
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.9), 0 2px 5px rgba(0,0,0,0.4), inset 0 3px 10px rgba(0,0,0,0.5);
-    background: radial-gradient(circle at 30% 30%, #ff0000 0%, #cc0000 100%);
-}
-
-.actuator-section {
-    background: rgba(255,255,255,0.1);
-    border: 2px solid #888;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    display: grid;
-    gap: 15px;
-}
-
-.actuator-content {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    gap: 20px;
-    align-items: center;
-    justify-items: center;
-}
-
-.dropdown {
-    width: 100%;
-    max-width: 450px;
-    padding: 15px;
-    font-size: 24px;
-    text-align: center;
-    border: 2px solid #888;
-    border-radius: 5px;
-    background: white;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    appearance: none;
-    cursor: pointer;
-}
-
-.bottom-icons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 0 20px;
-}
-
-.icon {
-    width: 50px;
-    height: 50px;
-    background: rgba(100,100,100,0.3);
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    font-size: 24px;
-    color: #666;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.icon:hover {
-    background: rgba(100,100,100,0.5);
-}
-
-.toggle-switch {
-    display: grid;
-    gap: 8px;
-    justify-items: center;
-    align-self: end;
-}
-
-.toggle-switch .section-title {
-    margin-bottom: 0;
-}
-
+/* ========== Toggle Switch ========== */
 .toggle-track {
+    position: absolute;
+    top: 60px;
+    left: 610px;
     width: 120px;
     height: 60px;
     background: linear-gradient(180deg, #d0d0d0 0%, #e8e8e8 100%);
     border: 3px solid #888;
     border-radius: 8px;
-    position: relative;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
     overflow: hidden;
-    margin-bottom: 5px;
 }
 
 .toggle-slider {
@@ -309,24 +235,105 @@ body {
     content: 'AUTO';
 }
 
-.toggle-labels {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 120px;
-    padding: 0 10px;
+/* ========== Indicators ========== */
+.indicator {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6a6a6a 0%, #4a4a4a 100%);
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
 }
 
-.toggle-label {
-    font-size: 11px;
+#manIndicator {
+    top: 235px;
+    left: 115px;
+}
+
+#errorIndicator {
+    top: 235px;
+    left: 335px;
+}
+
+/* MAN Indicator - Grün wenn aktiv */
+.indicator.man-active {
+    background: radial-gradient(circle at 30% 30%, #4caf50 0%, #2e7d32 100%);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.8), inset 0 3px 8px rgba(0,0,0,0.2);
+}
+
+/* ERROR Indicator - Rot durchgehend wenn aktiv */
+.indicator.error-active {
+    background: radial-gradient(circle at 30% 30%, #f44336 0%, #c62828 100%);
+    box-shadow: 0 0 20px rgba(244, 67, 54, 0.8), inset 0 3px 8px rgba(0,0,0,0.2);
+}
+
+/* ========== Step Display ========== */
+.step-value {
+    position: absolute;
+    top: 235px;
+    left: 540px;
+    background: white;
+    border: 3px solid #666;
+    padding: 15px 40px;
+    font-size: 36px;
     font-weight: bold;
-    color: #555;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.toggle-label:last-child {
-    text-align: right;
+/* ========== Emergency Stop ========== */
+.emergency-button {
+    position: absolute;
+    top: 235px;
+    left: 775px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #cc0000 0%, #990000 100%);
+    border: 8px solid #ffeb3b;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Settings Button */
+/* NOT-AUS gedrückt (eingerastet) - Pilz erscheint tiefer und leuchtet rot */
+.emergency-button.pressed {
+    transform: translateY(8px);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.9), 0 2px 5px rgba(0,0,0,0.4), inset 0 3px 10px rgba(0,0,0,0.5);
+    background: radial-gradient(circle at 30% 30%, #ff0000 0%, #cc0000 100%);
+}
+
+/* ========== Actuator Section ========== */
+.actuator-background {
+    position: absolute;
+    top: 350px;
+    left: 30px;
+    width: 940px;
+    height: 170px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #888;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.dropdown {
+    position: absolute;
+    top: 425px;
+    left: 450px;
+    width: 450px;
+    padding: 15px;
+    font-size: 24px;
+    text-align: center;
+    border: 2px solid #888;
+    border-radius: 5px;
+    background: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    appearance: none;
+    cursor: pointer;
+}
+
+/* ========== Settings Button ========== */
 .settings-button {
     position: fixed;
     top: 20px;
@@ -355,7 +362,7 @@ body {
     transform: rotate(45deg) translateY(2px);
 }
 
-/* Settings Modal */
+/* ========== Settings Modal ========== */
 .settings-modal {
     display: none;
     position: fixed;

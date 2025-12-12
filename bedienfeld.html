@@ -43,73 +43,58 @@
     </div>
 
     <div class="panel">
-        <div class="top-row">
-            <div class="control-group">
-                <div class="section-title">Toolcontrol</div>
-                <div class="button-row">
-                    <button class="button button-gray">Tool On</button>
-                    <button class="button button-gray">Tool Off</button>
-                </div>
-            </div>
+        <!-- Toolcontrol Section -->
+        <div class="label-toolcontrol">Toolcontrol</div>
+        <button class="button button-gray" id="toolOnBtn">Tool On</button>
+        <button class="button button-gray" id="toolOffBtn">Tool Off</button>
 
-            <div class="button-row">
-                <button class="button button-green">Start</button>
-                <button class="button button-red">Stop</button>
-                <div class="toggle-switch">
-                    <div class="section-title">Toolmode</div>
-                    <div class="toggle-track">
-                        <div class="toggle-slider"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- Start/Stop Buttons -->
+        <button class="button button-green" id="startBtn">Start</button>
+        <button class="button button-red" id="stopBtn">Stop</button>
 
-            <div class="control-group">
-                <div class="section-title">Reset/Quit</div>
-                <button class="button button-gray">Reset</button>
-            </div>
+        <!-- Toggle Switch -->
+        <div class="label-toolmode">Toolmode</div>
+        <div class="toggle-track" id="toggleTrack">
+            <div class="toggle-slider"></div>
         </div>
 
-        <div class="middle-row">
-            <div class="indicator-group">
-                <div class="indicator-label">MAN</div>
-                <div class="indicator" id="manIndicator"></div>
-            </div>
+        <!-- Reset Button -->
+        <div class="label-reset">Reset/Quit</div>
+        <button class="button button-gray" id="resetBtn">Reset</button>
 
-            <div class="indicator-group">
-                <div class="indicator-label">ERROR</div>
-                <div class="indicator" id="errorIndicator"></div>
-            </div>
+        <!-- MAN Indicator -->
+        <div class="label-man">MAN</div>
+        <div class="indicator" id="manIndicator"></div>
 
-            <div class="step-display">
-                <div class="indicator-label">Current Step</div>
-                <div class="step-value">00</div>
-            </div>
+        <!-- ERROR Indicator -->
+        <div class="label-error">ERROR</div>
+        <div class="indicator" id="errorIndicator"></div>
 
-            <div class="emergency-stop">
-                <div class="indicator-label">Emergency STOP</div>
-                <div class="emergency-button"></div>
-            </div>
-        </div>
+        <!-- Current Step -->
+        <div class="label-step">Current Step</div>
+        <div class="step-value">00</div>
 
-        <div class="actuator-section">
-            <div class="section-title">Actuator Selection</div>
-            <div class="actuator-content">
-                <button class="button button-gray">Home</button>
-                <button class="button button-gray">Work</button>
-                <select class="dropdown" id="actuatorDropdown">
-                    <option value="1">Actuator 1</option>
-                    <option value="2">Actuator 2</option>
-                    <option value="3">Actuator 3</option>
-                    <option value="4">Actuator 4</option>
-                    <option value="5">Actuator 5</option>
-                    <option value="6">Actuator 6</option>
-                    <option value="7">Actuator 7</option>
-                    <option value="8">Actuator 8</option>
-                    <option value="9">Actuator 9</option>
-                    <option value="10">Actuator 10</option>
-                </select>
-            </div>
-        </div>
+        <!-- Emergency Stop -->
+        <div class="label-emergency">Emergency STOP</div>
+        <div class="emergency-button"></div>
+
+        <!-- Actuator Section Background -->
+        <div class="actuator-background"></div>
+        <div class="label-actuator">Actuator Selection</div>
+        <button class="button button-gray" id="homeBtn">Home</button>
+        <button class="button button-gray" id="workBtn">Work</button>
+        <select class="dropdown" id="actuatorDropdown">
+            <option value="1">Actuator 1</option>
+            <option value="2">Actuator 2</option>
+            <option value="3">Actuator 3</option>
+            <option value="4">Actuator 4</option>
+            <option value="5">Actuator 5</option>
+            <option value="6">Actuator 6</option>
+            <option value="7">Actuator 7</option>
+            <option value="8">Actuator 8</option>
+            <option value="9">Actuator 9</option>
+            <option value="10">Actuator 10</option>
+        </select>
     </div>
 
     <script>
@@ -175,25 +160,25 @@
         }
 
         // Tool On Button (Taster)
-        setupButton(document.querySelectorAll('.button')[0], '/tool-on-press', '/tool-on-release');
+        setupButton(document.getElementById('toolOnBtn'), '/tool-on-press', '/tool-on-release');
 
         // Tool Off Button (Taster)
-        setupButton(document.querySelectorAll('.button')[1], '/tool-off-press', '/tool-off-release');
+        setupButton(document.getElementById('toolOffBtn'), '/tool-off-press', '/tool-off-release');
 
         // Start Button (Taster)
-        setupButton(document.querySelector('.button-green'), '/start-press', '/start-release');
+        setupButton(document.getElementById('startBtn'), '/start-press', '/start-release');
 
         // Stop Button (Taster)
-        setupButton(document.querySelector('.button-red'), '/stop-press', '/stop-release');
+        setupButton(document.getElementById('stopBtn'), '/stop-press', '/stop-release');
 
         // Reset Button (Taster)
-        setupButton(document.querySelectorAll('.button-gray')[2], '/reset-press', '/reset-release');
+        setupButton(document.getElementById('resetBtn'), '/reset-press', '/reset-release');
 
         // Home Button (Taster)
-        setupButton(document.querySelectorAll('.actuator-content .button')[0], '/home-press', '/home-release');
+        setupButton(document.getElementById('homeBtn'), '/home-press', '/home-release');
 
         // Work Button (Taster)
-        setupButton(document.querySelectorAll('.actuator-content .button')[1], '/work-press', '/work-release');
+        setupButton(document.getElementById('workBtn'), '/work-press', '/work-release');
 
         // Emergency Stop Button (Schalter - NOT-AUS-Pilz)
         // Logik: Gedrückt = xEM_STOP false, Nicht gedrückt = xEM_STOP true
@@ -225,7 +210,7 @@
         });
 
         // Toggle Switch Funktionalität (Manual/Auto Mode)
-        document.querySelector('.toggle-track').addEventListener('click', function() {
+        document.getElementById('toggleTrack').addEventListener('click', function() {
             this.classList.toggle('active');
             const isManual = !this.classList.contains('active');
             console.log(`Modus: ${isManual ? 'Manual' : 'Auto'}`);
@@ -237,10 +222,10 @@
         const errorIndicator = document.getElementById('errorIndicator');
 
         // Button Referenzen für Lampen
-        const toolOnButton = document.querySelectorAll('.button')[0];
-        const toolOffButton = document.querySelectorAll('.button')[1];
-        const startButton = document.querySelector('.button-green');
-        const resetButton = document.querySelectorAll('.button-gray')[2];
+        const toolOnButton = document.getElementById('toolOnBtn');
+        const toolOffButton = document.getElementById('toolOffBtn');
+        const startButton = document.getElementById('startBtn');
+        const resetButton = document.getElementById('resetBtn');
 
         // Status regelmäßig aktualisieren (jede 100 ms)
         setInterval(async () => {
