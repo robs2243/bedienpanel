@@ -193,7 +193,7 @@ body {
 .toggle-track {
     position: absolute;
     top: 60px;
-    left: 610px;
+    left: 660px;
     width: 120px;
     height: 60px;
     background: linear-gradient(180deg, #d0d0d0 0%, #e8e8e8 100%);
