@@ -44,7 +44,7 @@
 
     <div class="panel">
         <!-- Toolcontrol Section -->
-        <div class="label-toolcontrol">Toolcontrol</div>
+        <div class="label-toolcontrol" id="labelToolcontrol">Toolcontrol</div>
         <button class="button button-gray" id="toolOnBtn">Tool On</button>
         <button class="button button-gray" id="toolOffBtn">Tool Off</button>
 
@@ -53,34 +53,34 @@
         <button class="button button-red" id="stopBtn">Stop</button>
 
         <!-- Toggle Switch -->
-        <div class="label-toolmode">Toolmode</div>
+        <div class="label-toolmode" id="labelToolmode">Toolmode</div>
         <div class="toggle-track" id="toggleTrack">
             <div class="toggle-slider"></div>
         </div>
 
         <!-- Reset Button -->
-        <div class="label-reset">Reset/Quit</div>
+        <div class="label-reset" id="labelReset">Reset/Quit</div>
         <button class="button button-gray" id="resetBtn">Reset</button>
 
         <!-- MAN Indicator -->
-        <div class="label-man">MAN</div>
+        <div class="label-man" id="labelMan">MAN</div>
         <div class="indicator" id="manIndicator"></div>
 
         <!-- ERROR Indicator -->
-        <div class="label-error">ERROR</div>
+        <div class="label-error" id="labelError">ERROR</div>
         <div class="indicator" id="errorIndicator"></div>
 
         <!-- Current Step -->
-        <div class="label-step">Current Step</div>
-        <div class="step-value">00</div>
+        <div class="label-step" id="labelStep">Current Step</div>
+        <div class="step-value" id="stepValue">00</div>
 
         <!-- Emergency Stop -->
-        <div class="label-emergency">Emergency STOP</div>
-        <div class="emergency-button"></div>
+        <div class="label-emergency" id="labelEmergency">Emergency STOP</div>
+        <div class="emergency-button" id="emergencyBtn"></div>
 
         <!-- Actuator Section Background -->
-        <div class="actuator-background"></div>
-        <div class="label-actuator">Actuator Selection</div>
+        <div class="actuator-background" id="actuatorBackground"></div>
+        <div class="label-actuator" id="labelActuator">Actuator Selection</div>
         <button class="button button-gray" id="homeBtn">Home</button>
         <button class="button button-gray" id="workBtn">Work</button>
         <select class="dropdown" id="actuatorDropdown">
@@ -99,6 +99,23 @@
 
     <script>
         const API_URL = 'http://localhost:3001';
+
+        // Positionen aus JSON laden und anwenden
+        fetch('positions.json')
+            .then(response => response.json())
+            .then(positions => {
+                for (const [id, pos] of Object.entries(positions)) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.left = pos.x + 'px';
+                        element.style.top = pos.y + 'px';
+                    }
+                }
+                console.log('Positionen aus positions.json geladen');
+            })
+            .catch(error => {
+                console.error('Fehler beim Laden von positions.json:', error);
+            });
 
         // Hilfsfunktion für API Aufrufe
         async function callAPI(endpoint, body = null) {
@@ -182,7 +199,7 @@
 
         // Emergency Stop Button (Schalter - NOT-AUS-Pilz)
         // Logik: Gedrückt = xEM_STOP false, Nicht gedrückt = xEM_STOP true
-        const emergencyButton = document.querySelector('.emergency-button');
+        const emergencyButton = document.getElementById('emergencyBtn');
         let emergencyPressed = false; // Lokaler Zustand
 
         emergencyButton.addEventListener('click', async function() {
@@ -235,7 +252,7 @@
 
                 // Current Step aktualisieren
                 if (status.currentStep !== undefined) {
-                    const stepDisplay = document.querySelector('.step-value');
+                    const stepDisplay = document.getElementById('stepValue');
                     stepDisplay.textContent = String(status.currentStep).padStart(2, '0');
                 }
 

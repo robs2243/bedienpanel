@@ -1,0 +1,29 @@
+{
+  "labelToolcontrol": { "x": 55, "y": 30 },
+  "labelToolmode": { "x": 650, "y": 30 },
+  "labelReset": { "x": 811, "y": 30 },
+  "labelMan": { "x": 80, "y": 205 },
+  "labelError": { "x": 215, "y": 205 },
+  "labelStep": { "x": 510, "y": 205 },
+  "labelEmergency": { "x": 775, "y": 170 },
+  "labelActuator": { "x": 228, "y": 390 },
+
+  "toolOnBtn": { "x": 30, "y": 60 },
+  "toolOffBtn": { "x": 182, "y": 60 },
+  "startBtn": { "x": 370, "y": 60 },
+  "stopBtn": { "x": 500, "y": 60 },
+  "resetBtn": { "x": 820, "y": 60 },
+  "homeBtn": { "x": 80, "y": 425 },
+  "workBtn": { "x": 220, "y": 425 },
+
+  "toggleTrack": { "x": 660, "y": 60 },
+
+  "manIndicator": { "x": 115, "y": 235 },
+  "errorIndicator": { "x": 250, "y": 235 }, 
+  "stepValue": { "x": 540, "y": 235 },
+
+  "emergencyBtn": { "x": 800, "y": 215},
+
+  "actuatorBackground": { "x": 30, "y": 350 },
+  "actuatorDropdown": { "x": 450, "y": 425 }
+}
